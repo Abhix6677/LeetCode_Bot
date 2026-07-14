@@ -51,3 +51,7 @@ LeetCode Bot/
 | 🔄 Next Question | Get another question (topic mode) |
 | ✅ Completed | Mark current question as done |
 
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
