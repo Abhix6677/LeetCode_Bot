@@ -51,6 +51,3 @@ LeetCode Bot/
 | 🔄 Next Question | Get another question (topic mode) |
 | ✅ Completed | Mark current question as done |
 
-## License
-
-MIT License
