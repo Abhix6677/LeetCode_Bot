@@ -32,40 +32,6 @@ LeetCode Bot/
 └── runtime.txt             # Python version
 ```
 
-## Setup Instructions
-
-### Prerequisites
-
-- Python 3.11+
-- A Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
-
-### Local Setup
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/LeetCode-Bot.git
-cd LeetCode-Bot
-```
-
-2. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-3. Create a `.env` file in the root directory:
-
-```
-TELEGRAM_BOT_TOKEN=your_bot_token_here
-```
-
-4. Run the bot:
-
-```bash
-python main.py
-```
-
 ## Bot Commands
 
 | Command | Description |
@@ -84,47 +50,6 @@ python main.py
 | 📖 Help | Show help menu |
 | 🔄 Next Question | Get another question (topic mode) |
 | ✅ Completed | Mark current question as done |
-
-## Deploy to Railway (Free)
-
-Railway offers a free tier that can host your bot 24/7.
-
-### Steps:
-
-1. **Push to GitHub:**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git remote add origin https://github.com/yourusername/LeetCode-Bot.git
-   git push -u origin main
-   ```
-
-2. **Go to [Railway.app](https://railway.app)** and sign up with your GitHub account.
-
-3. **Create a new project:**
-   - Click "New Project"
-   - Select "Deploy from GitHub Repo"
-   - Choose your LeetCode-Bot repository
-
-4. **Add environment variable:**
-   - In your Railway project, go to "Variables"
-   - Add: `TELEGRAM_BOT_TOKEN` = `your_bot_token_here`
-
-5. **Railway will auto-detect** the `Procfile` and start running your bot.
-
-6. **Enable the web service** (required for Railway):
-   - Railway needs a web process to stay alive
-   - The bot uses polling, so no webhook setup needed
-
-### Alternative: Deploy to Render (Free)
-
-1. Go to [Render.com](https://render.com) and sign up
-2. Create a "Background Worker" (not Web Service)
-3. Connect your GitHub repo
-4. Set build command: `pip install -r requirements.txt`
-5. Set start command: `python main.py`
-6. Add environment variable: `TELEGRAM_BOT_TOKEN`
 
 ## License
 
