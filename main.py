@@ -21,14 +21,24 @@ if not TELEGRAM_BOT_TOKEN:
 PORT = int(os.getenv("PORT", "8080"))
 
 class HealthHandler(BaseHTTPRequestHandler):
-    """Minimal health-check endpoint — responds 200 OK on GET /."""
-    def do_GET(self):
+    """Minimal health-check endpoint — responds 200 OK on GET / and HEAD /."""
+
+    def _respond(self, *, include_body: bool):
+        """Send 200 OK with headers. Writes body only if include_body is True."""
         self.send_response(200)
         self.send_header("Content-Type", "text/plain")
         self.end_headers()
-        self.wfile.write(b"OK")
-    # Suppress default request logging to stderr
+        if include_body:
+            self.wfile.write(b"OK")
+
+    def do_GET(self):
+        self._respond(include_body=True)
+
+    def do_HEAD(self):
+        self._respond(include_body=False)
+
     def log_message(self, format, *args):
+        """Suppress default request logging to stderr."""
         pass
 
 def start_health_server():
