@@ -2,7 +2,7 @@ import os
 import logging
 from typing import Dict, List
 from telegram import Update, Bot, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, BotCommand
-from telegram.ext import Application, CommandHandler, ContextTypes, CallbackContext, MessageHandler, CallbackQueryHandler, filters
+from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, CallbackQueryHandler, filters
 from scheduler.task_generator import TaskGenerator
 from datetime import datetime
 
