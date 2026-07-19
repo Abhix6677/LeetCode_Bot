@@ -17,6 +17,8 @@ class TaskGenerator:
     def __init__(self, progress_dir: str = "database"):
         self.leetcode_api = LeetCodeAPI()
         self.progress_dir = progress_dir
+        # Ensure the progress directory exists on startup
+        os.makedirs(self.progress_dir, exist_ok=True)
         self.dsa_progression = [
             "Array", "HashMap", "Two Pointer", "Sliding Window", "Stack",
             "Queue", "Linked List", "Binary Search", "Tree", "Graph", "Dynamic Programming"
@@ -42,6 +44,7 @@ class TaskGenerator:
         """Save user progress to JSON file"""
         progress_file = self._get_progress_file(user_id)
         try:
+            os.makedirs(self.progress_dir, exist_ok=True)
             with open(progress_file, 'w') as f:
                 json.dump(progress, f, indent=2)
         except Exception as e:
@@ -156,6 +159,7 @@ class TaskGenerator:
             
             if user_id not in users:
                 users.append(user_id)
+                os.makedirs(self.progress_dir, exist_ok=True)
                 with open(active_file, 'w') as f:
                     json.dump(users, f, indent=2)
         except Exception as e:

@@ -15,6 +15,11 @@ if not TELEGRAM_BOT_TOKEN:
     print("Error: TELEGRAM_BOT_TOKEN not found in .env file")
     exit(1)
 
+# Ensure the data directory exists (Render's ephemeral filesystem resets on restart)
+DATA_DIR = "database"
+os.makedirs(DATA_DIR, exist_ok=True)
+print(f"Data directory '{DATA_DIR}/' ready")
+
 print("Starting LeetCode Daily Task Bot...")
 print(f"Bot Token: {TELEGRAM_BOT_TOKEN[:5]}...{TELEGRAM_BOT_TOKEN[-5:]}")
 
