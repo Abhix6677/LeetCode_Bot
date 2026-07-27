@@ -35,48 +35,38 @@ module.exports = async (req, res) => {
       redirect: 'follow',
     });
 
-    const responseText = await response.text();
+    const text = await response.text();
 
     const headersObj = {};
     response.headers.forEach((val, key) => {
       headersObj[key] = val;
     });
 
-    // Debug logging
-    console.log('[PROXY DEBUG - /api/problems/all]', {
+    const isCloudflareChallenge = text.includes('cf-mitigated') ||
+                                  text.includes('Just a moment...') ||
+                                  text.includes('Attention Required! | Cloudflare') ||
+                                  (response.status === 403 && text.includes('Cloudflare'));
+
+    const debugInfo = {
+      targetUrl,
       finalUrl: response.url,
       status: response.status,
+      contentType: response.headers.get('content-type'),
+      isCloudflareChallenge,
       headers: headersObj,
-      bodyPreview: responseText.substring(0, 500),
-    });
+      bodyPreview: text.substring(0, 500),
+      bodyLength: text.length
+    };
 
-    // Preserve Set-Cookie header if returned
-    const setCookie = response.headers.get('set-cookie');
-    if (setCookie) {
-      res.setHeader('Set-Cookie', setCookie);
-    }
+    console.log('[DEBUG LOG]', JSON.stringify(debugInfo, null, 2));
 
-    // Explicit Cloudflare challenge detection
-    const isCloudflareChallenge = responseText.includes('cf-mitigated') ||
-                                  responseText.includes('Just a moment...') ||
-                                  responseText.includes('Attention Required! | Cloudflare') ||
-                                  (response.status === 403 && responseText.includes('Cloudflare'));
-
-    if (isCloudflareChallenge) {
-      console.warn('[WARNING] Cloudflare Security Challenge detected when fetching LeetCode API!');
-    }
-
-    res.statusCode = response.status;
-    const contentType = response.headers.get('content-type');
-    if (contentType) {
-      res.setHeader('Content-Type', contentType);
-    }
-
-    return res.end(responseText);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    return res.end(JSON.stringify(debugInfo, null, 2));
   } catch (err) {
-    console.error('[PROXY ERROR]', err);
+    console.error('[DEBUG ERROR]', err);
     res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
-    return res.end(JSON.stringify({ error: 'Proxy request to LeetCode REST API failed', message: err.message }));
+    return res.end(JSON.stringify({ error: 'Debug fetch failed', message: err.message }));
   }
 };
