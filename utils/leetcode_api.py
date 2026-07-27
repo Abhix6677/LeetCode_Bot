@@ -8,11 +8,6 @@ class LeetCodeAPI:
     """LeetCode API wrapper that fetches all problems directly from LeetCode's
     REST endpoint every time it's needed. Questions are always fresh."""
 
-    PROXY_BASE = os.getenv("LEETCODE_PROXY_BASE", "").rstrip("/")
-
-    PROBLEMS_URL = f"{PROXY_BASE}/api/problems/all/" if PROXY_BASE else "https://leetcode.com/api/problems/all/"
-    GRAPHQL_URL = f"{PROXY_BASE}/graphql" if PROXY_BASE else "https://leetcode.com/graphql"
-
     HEADERS = {
         "Content-Type": "application/json",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -24,6 +19,10 @@ class LeetCodeAPI:
 
     def __init__(self):
         self.base_url = "https://leetcode.com"
+        self.proxy_base = os.getenv("LEETCODE_PROXY_BASE", "").rstrip("/")
+        self.problems_url = f"{self.proxy_base}/api/problems/all/" if self.proxy_base else "https://leetcode.com/api/problems/all/"
+        self.graphql_url = f"{self.proxy_base}/graphql" if self.proxy_base else "https://leetcode.com/graphql"
+        print(f"Using LeetCode problems URL: {self.problems_url}")
         self._problems_cache: Optional[List[Dict]] = None
 
     def _fetch_all_problems(self) -> List[Dict]:
@@ -32,7 +31,7 @@ class LeetCodeAPI:
         No topic tags from REST API — we use the title-based heuristic instead.
         """
         try:
-            resp = requests.get(self.PROBLEMS_URL, headers=self.HEADERS, timeout=30)
+            resp = requests.get(self.problems_url, headers=self.HEADERS, timeout=30)
             resp.raise_for_status()
             data = resp.json()
         except Exception as e:
