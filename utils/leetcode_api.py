@@ -1,3 +1,4 @@
+import os
 import requests
 import random
 from typing import List, Dict, Optional
@@ -7,8 +8,10 @@ class LeetCodeAPI:
     """LeetCode API wrapper that fetches all problems directly from LeetCode's
     REST endpoint every time it's needed. Questions are always fresh."""
 
-    PROBLEMS_URL = "https://leetcode.com/api/problems/all/"
-    GRAPHQL_URL = "https://leetcode.com/graphql"
+    PROXY_BASE = os.getenv("LEETCODE_PROXY_BASE", "").rstrip("/")
+
+    PROBLEMS_URL = f"{PROXY_BASE}/api/problems/all/" if PROXY_BASE else "https://leetcode.com/api/problems/all/"
+    GRAPHQL_URL = f"{PROXY_BASE}/graphql" if PROXY_BASE else "https://leetcode.com/graphql"
 
     HEADERS = {
         "Content-Type": "application/json",
