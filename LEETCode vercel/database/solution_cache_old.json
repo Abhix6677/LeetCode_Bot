@@ -1,0 +1,76 @@
+{
+  "count-commas-in-range": {
+    "java": {
+      "approach": "All numbers from 1 to 999 have no comma. The first number that gets a comma is 1,000, and since n is at most 100,000, every number from 1,000 up to n has exactly one comma. So the answer is the count of integers from 1,000 to n, which is n - 999 (or 0 if n is smaller than 1,000).",
+      "time": "O(1)",
+      "space": "O(1)",
+      "code": "class Solution {\n    public int countCommas(int n) {\n        if (n < 1000) {\n            return 0;\n        }\n        return n - 999;\n    }\n}",
+      "hints": [
+        "Hint 1: Think about which number is the first one that needs a comma.",
+        "Hint 2: For n up to 100,000, every number from 1,000 onward has exactly one comma.",
+        "Hint 3: Count how many integers are in the range [1000, n]. The answer is the size of that range, or 0 if n < 1000."
+      ],
+      "provider": "oc/big-pickle",
+      "cached_at": "2026-08-06T11:02:10.156184Z",
+      "version": 1
+    }
+  },
+  "count-all-valid-pickup-and-delivery-options": {
+    "java": {
+      "approach": "Start with 1 valid sequence for 1 order. Suppose we have a valid sequence for n-1 orders. To add the nth order, the final sequence will have 2n positions. Choose any 2 of those positions for the new pickup and delivery: the earlier position must be the pickup, the later position must be the delivery, so every chosen pair is valid. The old n-1 orders keep their original relative order in the remaining positions. The number of ways to choose 2 positions is C(2n,2)=n(2n-1). Thus f(n)=f(n-1)*n*(2n-1). Compute this recurrence modulo 1,000,000,007.",
+      "time": "O(N)",
+      "space": "O(1)",
+      "code": "class Solution {\n    public int countOrders(int n) {\n        final long MOD = 1_000_000_007L;\n        long ans = 1L;\n        for (int i = 1; i <= n; i++) {\n            ans = ans * i % MOD;\n            ans = ans * (2 * i - 1) % MOD;\n        }\n        return (int) ans;\n    }\n}",
+      "hints": [
+        "Hint 1: Think about all possible arrangements of the 2n events first, then use symmetry to remove invalid ones.",
+        "Hint 2: For each order, exactly one of the two relative orders (pickup before delivery vs. delivery before pickup) is allowed. Pair each sequence with the one obtained by swapping the pickup/delivery labels of some orders.",
+        "Hint 3: If a valid sequence for n-1 orders is already built, inserting the new pickup and delivery can be done by choosing any 2 positions among 2n final positions: the earlier position must be the pickup and the later the delivery. This gives recurrence f(n)=f(n-1)*n*(2n-1)."
+      ],
+      "provider": "oc/big-pickle",
+      "cached_at": "2026-08-06T11:24:45.639231Z",
+      "version": 1
+    },
+    "c++": {
+      "approach": "Think of building the answer one order at a time. If we already have a valid sequence for i-1 orders, we need to insert the i-th order into that sequence. This new order contributes two positions (P_i and D_i) to the final sequence. For any two chosen positions, P_i must be the earlier one and D_i the later one. The number of ways to choose two positions from 2i positions is C(2i, 2) = i(2i - 1). Multiplying the previous count by this factor gives the total number of valid sequences. Start with 1 way for 0 orders and repeat for n orders.",
+      "time": "O(N)",
+      "space": "O(1)",
+      "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countOrders(int n) {\n        const int MOD = 1000000007;\n        long long ans = 1;\n\n        for (int i = 1; i <= n; ++i) {\n            // Adding the i-th order multiplies by i * (2i - 1)\n            ans = ans * i % MOD;\n            ans = ans * (2 * i - 1) % MOD;\n        }\n\n        return (int)ans;\n    }\n};",
+      "hints": [
+        "Hint 1: Instead of generating all sequences, try to count them by building up from fewer orders to more orders.",
+        "Hint 2: When adding a new order to a valid sequence, the new pickup and delivery can be placed into two of the available positions, but the pickup must come before the delivery.",
+        "Hint 3: For a sequence of i orders, the new order adds i * (2i - 1) possible placements: choose any 2 positions for P and D, and only the earlier position can be P. Multiply the previous answer by this factor and use modulo."
+      ],
+      "provider": "oc/big-pickle",
+      "cached_at": "2026-08-06T11:24:59.068526Z",
+      "version": 1
+    },
+    "python": {
+      "approach": "We build the sequences one order at a time. For the first order there is exactly 1 valid sequence. Suppose we already know the number of valid sequences for i-1 orders, and each such sequence has 2(i-1) events. To add the i-th order, we need to insert its pickup Pi and delivery Di somewhere into the existing sequence. The new total number of slots is 2i. Choose any two of these slots for Pi and Di; the earlier slot must be Pi and the later slot must be Di, so every unordered pair of positions gives exactly one valid insertion. There are C(2i, 2) = i * (2i - 1) ways to choose the two positions. Therefore, multiply the previous count by this factor for each i from 1 to n. This is equivalent to (2n)! / 2^n, but we compute it directly with modular multiplication.",
+      "time": "O(N)",
+      "space": "O(1)",
+      "code": "class Solution:\n    def countOrders(self, n: int) -> int:\n        MOD = 10**9 + 7\n        res = 1\n        for i in range(1, n + 1):\n            res = res * i * (2 * i - 1) % MOD\n        return res",
+      "hints": [
+        "Hint 1: A very gentle nudge in the right direction without revealing the algorithm. Try to think about building the result by adding one order at a time.",
+        "Hint 2: A slightly more detailed hint pointing out the core concept. When adding the i-th order, imagine inserting its pickup and delivery into a sequence that already contains i-1 orders. How many total slots are there, and what must be true about the order of the two new events?",
+        "Hint 3: The almost complete logic before writing the code. For every pair of positions chosen for the pickup and delivery, exactly one ordering is valid (pickup before delivery). So the number of ways to insert the i-th order is C(2i, 2) = i * (2i - 1). Multiply the previous answer by this factor for each i."
+      ],
+      "provider": "oc/big-pickle",
+      "cached_at": "2026-08-06T11:29:31.486698Z",
+      "version": 1
+    },
+    "javascript": {
+      "approach": "As we add orders one by one, we can insert the new pickup and delivery into any previous valid sequence. For the i-th order, there are 2i positions in the final sequence. Choose any 2 of those positions for this order's pickup and delivery: the earlier chosen position gets the pickup and the later gets the delivery. That gives C(2i,2) = i * (2i - 1) ways to place this order without changing the relative order of earlier events. Multiply this into the answer for every order from 1 to n.",
+      "time": "O(N)",
+      "space": "O(1)",
+      "code": "const MOD = 1000000007;\n\nvar countOrders = function(n) {\n    let ans = 1;\n    for (let i = 1; i <= n; i++) {\n        ans = (ans * i) % MOD;\n        ans = (ans * (2 * i - 1)) % MOD;\n    }\n    return ans;\n};",
+      "hints": [
+        "Hint 1: Imagine building a valid sequence one order at a time. How many places can the next order's pickup and delivery go?",
+        "Hint 2: When adding the i-th order, there are 2i total events. You need to pick two positions for pickup(i) and delivery(i). The pickup must be in the earlier position.",
+        "Hint 3: The number of ways to pick two positions out of 2i is C(2i, 2). Notice C(2i,2) = i * (2i - 1). Multiply this factor for every i from 1 to n, taking modulo 10^9 + 7."
+      ],
+      "provider": "oc/deepseek-v4-flash-free",
+      "cached_at": "2026-08-06T11:41:38.126694Z",
+      "version": 1
+    }
+  }
+}

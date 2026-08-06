@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class TaskGenerator:
     def __init__(self, progress_dir: str = "database"):
-        self.leetcode_api = LeetCodeAPI()
+        self.leetcode_api = LeetCodeAPI(cache_dir="database")
         self.progress_dir = progress_dir
         # Ensure the progress directory exists on startup
         os.makedirs(self.progress_dir, exist_ok=True)
@@ -51,6 +51,33 @@ class TaskGenerator:
             logger.error(f"Error saving progress: {e}")
             raise
     
+    def get_preferred_language(self, user_id: int) -> Optional[str]:
+        progress = self.load_progress(user_id)
+        return progress.get("preferred_language")
+
+    def set_preferred_language(self, user_id: int, language: str):
+        progress = self.load_progress(user_id)
+        progress["preferred_language"] = language
+        self.save_progress(progress, user_id)
+
+    def get_hint_index(self, user_id: int, slug: str) -> int:
+        progress = self.load_progress(user_id)
+        hints = progress.get("hint_tracking", {})
+        return hints.get(slug, 0)
+
+    def increment_hint_index(self, user_id: int, slug: str) -> int:
+        progress = self.load_progress(user_id)
+        if "hint_tracking" not in progress:
+            progress["hint_tracking"] = {}
+        
+        current = progress["hint_tracking"].get(slug, 0)
+        # Max 3 hints
+        if current < 3:
+            current += 1
+            progress["hint_tracking"][slug] = current
+            self.save_progress(progress, user_id)
+        return current
+
     def get_daily_tasks(self, user_id: int = 1) -> Optional[Dict]:
         """Get today's task (single random question). Returns cached task if same day,
         otherwise generates a new one. Resets at 11:59 PM each day."""

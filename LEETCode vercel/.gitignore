@@ -9,6 +9,12 @@ __pycache__/
 # User data files
 database/user_*.json
 database/active_users.json
+database/*.db
+*.db
+*.db-shm
+*.db-wal
+*.session
+*.session-journal
 
 # IDE
 .vscode/

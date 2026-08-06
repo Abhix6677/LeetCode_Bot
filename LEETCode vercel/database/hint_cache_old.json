@@ -1,0 +1,24 @@
+{
+  "count-all-valid-pickup-and-delivery-options": {
+    "javascript": [
+      "Think about inserting each new order's pickup and delivery into an existing valid sequence of length 2*(n-1). How many valid positions can you insert the new pickup, and then how many valid positions for the delivery after it?",
+      "For a sequence with k-1 orders already placed, there are 2(k-1)+1 slots where the pickup of the k-th order can be inserted. After placing the pickup, the delivery must go somewhere to the right of itâcount the available slots after the pickup.",
+      "Use the product formula: answer for k orders = answer for (k-1) orders * ( (2k-2 choose 2)? / no... ) Actually, for each new order you multiply by (2k-2 + 1) * (2k-1) / 2? Let's derive: pickup has 2k-1 positions, then delivery has (2k - pickupIndex?) total... Sum over pickup positions gives k*(2k-1) valid insertions. So answer = previous * k * (2k-1). Start with answer=1, loop from 2 to n."
+    ],
+    "java": [
+      "Think incrementally: start with one order, then consider how inserting a new order's pickup and delivery into an existing valid sequence affects the count.",
+      "For k orders already placed, the sequence has length 2k. To add one more order, you need to choose two positions for its pickup and delivery, but pickup must come before delivery. How many such pairs of positions are there?",
+      "For each k from 0 to n-1, the number of ways to insert the next order is (2k+1)(2k+2)/2. Multiply all these factors together, taking the result modulo 10^9+7. This equals (2n)! / 2^n modulo the same value."
+    ],
+    "c++": [
+      "Think about building the sequence order by order. For each new order, where can its pickup and delivery be placed relative to the already valid sequence?",
+      "For the i-th order, there are 2i possible positions in the final sequence. Choose two positions: the earlier one must be the pickup, the later one the delivery. This gives C(2i, 2) ways to insert the new order.",
+      "Let dp[i] be the number of valid sequences for i orders. Set dp[1] = 1, then dp[i] = dp[i-1] * i * (2*i - 1) modulo 10^9 + 7. Return dp[n]."
+    ],
+    "python": [
+      "Try to build the sequence incrementally. If you already have a valid sequence for n-1 orders, how can you insert the pickup and delivery of the nth order without breaking existing constraints?",
+      "For the kth order, imagine inserting Pickup k into any of the (2k-1) gaps in a valid sequence of k-1 orders. Then Delivery k must go somewhere after it; count how many valid positions remain for Delivery k after choosing Pickup k's position.",
+      "When inserting the kth order into a sequence of length 2(k-1), there are C(2k, 2) ways to choose the two positions for Pickup k and Delivery k, because any two distinct positions work as long as Pickup's position is before Delivery's. That gives multiplier k(2k-1). So the answer is product_{k=1..n} k(2k-1) modulo 10^9+7. Implement iteratively."
+    ]
+  }
+}

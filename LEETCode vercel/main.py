@@ -59,6 +59,14 @@ print(f"Data directory '{DATA_DIR}/' ready")
 print("Starting LeetCode Daily Task Bot...")
 print(f"Bot Token: {TELEGRAM_BOT_TOKEN[:5]}...{TELEGRAM_BOT_TOKEN[-5:]}")
 
+# ── Start the Generator Subsystem ───────────────────────────────────────────
+try:
+    from generator_main import start_generator_subsystem
+    start_generator_subsystem()
+    print("Generator subsystem running in background.")
+except ImportError as e:
+    print(f"Could not start generator subsystem: {e}")
+
 # ── Create and run the bot ──────────────────────────────────────────────────
 bot = LeetCodeBot(TELEGRAM_BOT_TOKEN, admin_user_id=int(ADMIN_USER_ID) if ADMIN_USER_ID else None)
 bot.run()
