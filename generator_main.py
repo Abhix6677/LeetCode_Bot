@@ -89,12 +89,12 @@ def _build_dashboard_text(db) -> str:
     up_bars = int(up_pct / 10)
     up_bar_str = "█" * up_bars + "░" * (10 - up_bars)
     
-    langs = {r[0]: r[1] for r in lang_rows}
-    java = langs.get("Java", 0)
-    py = langs.get("Python", 0)
-    cpp = langs.get("C++", 0)
-    c = langs.get("C", 0)
-    js = langs.get("JavaScript", 0)
+    langs = {r[0].lower() if r[0] else "": r[1] for r in lang_rows}
+    java = langs.get("java", 0)
+    py = langs.get("python", 0)
+    cpp = langs.get("c++", 0)
+    c = langs.get("c", 0)
+    js = langs.get("javascript", 0)
     
     now = datetime.datetime.now().strftime("%H:%M:%S")
     
